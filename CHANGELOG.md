@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.6.4] - 2026-10-21
+
+### 变更
+* npm 包名及 Release 工作流默认发布目标统一为 `@latekin/coding-helper`，仓库、主页和问题反馈链接指向个人仓库。
+* 中英文 README、贡献指南和 Issue 模板统一使用个人包名，补充最新版向导、全局安装、状态检查和还原命令。
+
+### 修复
+* 菜单中的更新操作改为安装 `@latekin/coding-helper@latest`；启动、帮助和撤销提示统一使用个人包，避免运行或安装上游包。
+
 ## [0.6.3] - 2026-10-21
 
 ### 变更
