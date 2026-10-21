@@ -112,7 +112,7 @@ export function renderResultSummary(results: ToolResult[], options: { restore?: 
   if (ok.length > 0 && !isDryRun()) {
     const commands = ok.filter((r) => r.tool.isInstalled() !== null).map((r) => theme.value(r.tool.command));
     if (commands.length) logger.log(`  ${theme.brandBold(t('result_next'))}  ${t('result_next_launch', { commands: commands.join(theme.subtle(' / ')) })}`);
-    logger.log(`  ${theme.subtle(t('result_undo'))}  ${theme.value('npx qiniu-coding-helper restore')}`);
+    logger.log(`  ${theme.subtle(t('result_undo'))}  ${theme.value('npx @latekin/coding-helper restore')}`);
   }
   renderBackupHint();
   logger.newLine();

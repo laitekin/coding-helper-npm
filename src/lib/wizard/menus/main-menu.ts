@@ -183,7 +183,7 @@ async function updateHelper(): Promise<void> {
   logger.info(t('update_running'));
   const { execSync } = await import('node:child_process');
   try {
-    execSync('npm install -g qiniu-coding-helper@latest', { stdio: 'inherit' });
+    execSync('npm install -g @latekin/coding-helper@latest', { stdio: 'inherit' });
     uiRenderer.renderSuccess(t('update_latest'));
   } catch {
     uiRenderer.renderError(t('error_unknown'));

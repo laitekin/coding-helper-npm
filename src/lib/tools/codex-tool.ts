@@ -352,7 +352,7 @@ export function codexProviderName(profile: string): string {
 
 export function buildCodexProfileFile(profile: string, model: string, catalogPath?: string): string {
   return [
-    '# 由 qiniu-coding-helper 生成：codex -p ' + codexProfileName(profile),
+    '# 由 @latekin/coding-helper 生成：codex -p ' + codexProfileName(profile),
     `model_provider = "${codexProviderName(profile)}"`,
     `model = "${escapeTomlString(model)}"`,
     ...(catalogPath ? [`model_catalog_json = "${escapeTomlString(catalogPath)}"`] : []),

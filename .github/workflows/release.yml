@@ -18,10 +18,10 @@ on:
         type: boolean
         default: false
       package_name:
-        description: "发布到 npm 的包名（fork 仓库可改为自己的 scope，如 @your-name/coding-helper）"
+        description: "发布到 npm 的包名（默认使用个人包 @latekin/coding-helper）"
         required: true
         type: string
-        default: qiniu-coding-helper
+        default: '@latekin/coding-helper'
 
 permissions:
   contents: write
@@ -358,9 +358,8 @@ jobs:
               .addRaw(`npm 包：${process.env.PACKAGE_NAME}@${version.replace(/^v/, "")}`)
               .write();
 
-      # 包名只在发布时改，不写回仓库，便于 fork 与上游保持同一份代码
+      # 发布时始终使用所选包名；仓库默认包为 @latekin/coding-helper
       - name: Set package name
-        if: inputs.package_name != 'qiniu-coding-helper'
         env:
           PACKAGE_NAME: ${{ inputs.package_name }}
         run: npm pkg set "name=${PACKAGE_NAME}"

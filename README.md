@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🚀 qiniu-coding-helper
+# 🚀 @latekin/coding-helper
 
-[![npm version](https://badge.fury.io/js/qiniu-coding-helper.svg)](https://www.npmjs.com/package/qiniu-coding-helper)
+[![npm version](https://img.shields.io/npm/v/%40latekin%2Fcoding-helper.svg)](https://www.npmjs.com/package/@latekin/coding-helper)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Node.js Version](https://img.shields.io/node/v/qiniu-coding-helper.svg)](https://nodejs.org)
+[![Node.js Version](https://img.shields.io/node/v/%40latekin%2Fcoding-helper.svg)](https://nodejs.org)
 
 **一条命令，让本机所有 AI 编程助手接入七牛 AI 大模型推理服务**
 
@@ -22,27 +22,49 @@
 
 | 你想要 | 怎么做 |
 |---|---|
-| 一条命令配好某个编程助手 | `npx qiniu-coding-helper codex sk-xxx`，模型可作为第三个参数 |
-| 把本机装好的编程助手全部接入七牛 | `npx qiniu-coding-helper setup`，勾选后一次写完，最后给出汇总表 |
-| 不想动配置文件，只临时用七牛跑一次 | `npx qiniu-coding-helper run claude`，只对这次启动生效 |
-| 先看看会改哪些文件 | `npx qiniu-coding-helper setup --dry-run`，逐文件展示差异，Key 打码，不写入 |
+| 一条命令配好某个编程助手 | `npx @latekin/coding-helper codex sk-xxx`，模型可作为第三个参数 |
+| 把本机装好的编程助手全部接入七牛 | `npx @latekin/coding-helper setup`，勾选后一次写完，最后给出汇总表 |
+| 不想动配置文件，只临时用七牛跑一次 | `npx @latekin/coding-helper run claude`，只对这次启动生效 |
+| 先看看会改哪些文件 | `npx @latekin/coding-helper setup --dry-run`，逐文件展示差异，Key 打码，不写入 |
 | 换了 Key 或线路 | 在菜单里改一次，勾选要同步的编程助手；命令行用 `auth sk-xxx --sync` |
-| 看哪些编程助手已经接入 | `npx qiniu-coding-helper status` |
-| 不用了，恢复原样 | `npx qiniu-coding-helper restore`，删掉七牛条目并写回原来的值 |
-| 配好了却不生效 | `npx qiniu-coding-helper doctor`，检查 Key、账户余额状态、网络和环境变量覆盖 |
+| 看哪些编程助手已经接入 | `npx @latekin/coding-helper status` |
+| 不用了，恢复原样 | `npx @latekin/coding-helper restore`，删掉七牛条目并写回原来的值 |
+| 配好了却不生效 | `npx @latekin/coding-helper doctor`，检查 Key、账户余额状态、网络和环境变量覆盖 |
 | 在脚本或 CI 里批量配置 | `setup --yes --json`，Key 用 `--key-stdin` 从标准输入读，退出码区分成功与失败 |
 | 公司、个人多个账号，或国内外线路来回切 | 配置档：`profile add work sk-xxx`，`profile use work` 一键切换；Codex 还能直接 `codex -p qn-work` |
 | 控制成本和速度 | 上下文大小：`--context 64k` 或主菜单「上下文大小」，各工具按模型上限自动收窄 |
 
 ## 🚀 快速开始
 
+推荐直接启动最新版交互向导，按提示选择线路、输入 API Key、勾选工具并确认写入：
+
+```bash
+npx @latekin/coding-helper@latest
+```
+
+查看版本、接入状态，或还原配置：
+
+```bash
+npx @latekin/coding-helper@latest --version
+npx @latekin/coding-helper@latest status
+npx @latekin/coding-helper@latest doctor
+npx @latekin/coding-helper@latest restore
+```
+
+也可以全局安装或更新，之后使用 `coding-helper` 命令：
+
+```bash
+npm install -g @latekin/coding-helper@latest
+coding-helper
+```
+
 无需安装，Node.js 18 以上直接运行。**一条命令**：工具名 + API Key（[获取地址](https://portal.qiniu.com/ai-inference/api-key)）+ 可选的模型 ID：
 
 ```bash
-npx qiniu-coding-helper codex sk-xxx                              # 模型自动选择
-npx qiniu-coding-helper claude sk-xxx deepseek/deepseek-v4-pro    # 指定模型
-npx qiniu-coding-helper claude,codex,opencode sk-xxx              # 一次配多个
-npx qiniu-coding-helper all sk-xxx                                # 本机已安装的全部
+npx @latekin/coding-helper codex sk-xxx                              # 模型自动选择
+npx @latekin/coding-helper claude sk-xxx deepseek/deepseek-v4-pro    # 指定模型
+npx @latekin/coding-helper claude,codex,opencode sk-xxx              # 一次配多个
+npx @latekin/coding-helper all sk-xxx                                # 本机已安装的全部
 ```
 
 命令会依次校验 Key、账户和模型，全部通过后才写入配置，最后告诉你怎么启动、怎么撤销：
@@ -53,10 +75,10 @@ npx qiniu-coding-helper all sk-xxx                                # 本机已安
 ✔ 已配置 OpenCode
 
 运行 opencode 开始使用
-撤销：npx qiniu-coding-helper restore opencode
+撤销：npx @latekin/coding-helper restore opencode
 ```
 
-更喜欢一步步选？直接运行 `npx qiniu-coding-helper`，进入向导：语言 → 线路 → API Key → 勾选编程助手 → 选模型 → 确认。每一步按 Esc 回到上一步，已填的内容保留。之后再运行会进入主菜单。
+更喜欢一步步选？直接运行 `npx @latekin/coding-helper`，进入向导：语言 → 线路 → API Key → 勾选编程助手 → 选模型 → 确认。每一步按 Esc 回到上一步，已填的内容保留。之后再运行会进入主菜单。
 
 **只需要方向键、回车和 Esc。** ↑↓ 选择，回车确认，Esc 返回；需要搜索的地方直接打字。主菜单只有 6 项：接入编码工具 / 切换模型 / 我的工具 / 账号与线路 / 健康检查 / 更多…（上下文大小、还原、语言、更新、清除）。
 
@@ -112,7 +134,7 @@ npx qiniu-coding-helper all sk-xxx                                # 本机已安
 | Grok CLI | `~/.grok/config.toml` | ✅ 1.0.62 | `grok`（默认模型指向七牛） |
 | OpenClaw | `~/.openclaw/openclaw.json` | ✅ 2026.6.35 | `openclaw`（主模型为 `qiniu/<模型>`） |
 | MiniMax Code | 调用官方 `mcode provider add` 写入 `~/.minimax/config.yaml` | ✅ 0.6.12 | `mcode` |
-| GitHub Copilot CLI | 无配置文件，只注入环境变量 | ✅ 1.0.100 | `npx qiniu-coding-helper run copilot` |
+| GitHub Copilot CLI | 无配置文件，只注入环境变量 | ✅ 1.0.100 | `npx @latekin/coding-helper run copilot` |
 | CodeBuddy | `~/.codebuddy/models.json` | ✅ 2.170.0 | `codebuddy`，用 `--model` 选七牛模型 |
 | Hermes Agent | `~/.hermes/config.yaml` 的 `model` | ✅ 官方安装脚本 | `hermes` |
 | WorkBuddy | `~/.workbuddy/models.json` | ⚠️ 未实测 | 桌面应用，手动启动 |
@@ -146,7 +168,7 @@ WorkBuddy 只有 Windows / macOS 桌面版，无法在 Linux 实测。它的配�
 | `coding-helper init` | 重新运行首次向导 |
 | `coding-helper lang show` / `lang set zh_CN\|en_US` | 查看或切换界面语言 |
 
-以下示例中的 `coding-helper` 都可以写成 `npx qiniu-coding-helper`。工具名支持别名，如 `claude`、`qwen`、`kimi`、`mcode`、`factory`。
+以下示例中的 `coding-helper` 都可以写成 `npx @latekin/coding-helper`。工具名支持别名，如 `claude`、`qwen`、`kimi`、`mcode`、`factory`。
 
 ### 🎯 一条命令：工具 + Key + 模型
 
@@ -173,7 +195,7 @@ coding-helper <工具[,工具…]|all> [API Key] [模型 ID] [选项]
 
 **Codex 的模型：** Codex 通过七牛的 Responses 接口工作，命令会先发一次最小请求确认模型可用。实测 GPT、Qwen、GLM、Kimi 系列可用，DeepSeek 暂不可用。不指定模型时 Codex 使用 `openai/gpt-6-astra`；和其他工具一起配置时，不兼容的模型只会跳过 Codex。
 
-**Key 的安全：** 写在命令里的 Key 会留在 shell 历史中，命令结束时会提示。更稳妥的写法是 `QINIU_API_KEY=sk-xxx npx qiniu-coding-helper codex`，或在命令前加一个空格（多数 shell 不记录）。
+**Key 的安全：** 写在命令里的 Key 会留在 shell 历史中，命令结束时会提示。更稳妥的写法是 `QINIU_API_KEY=sk-xxx npx @latekin/coding-helper codex`，或在命令前加一个空格（多数 shell 不记录）。
 
 ### ⚡ setup：一键配置
 
