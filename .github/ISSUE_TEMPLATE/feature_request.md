@@ -12,7 +12,7 @@ assignees: ''
 
 ## 期望方案
 
-请描述你希望 qiniu-coding-helper 怎么支持这个需求。
+请描述你希望 @latekin/coding-helper 怎么支持这个需求。
 
 ## 目标工具
 

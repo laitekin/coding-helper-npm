@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🚀 qiniu-coding-helper
+# 🚀 @latekin/coding-helper
 
-[![npm version](https://badge.fury.io/js/qiniu-coding-helper.svg)](https://www.npmjs.com/package/qiniu-coding-helper)
+[![npm version](https://img.shields.io/npm/v/%40latekin%2Fcoding-helper.svg)](https://www.npmjs.com/package/@latekin/coding-helper)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Node.js Version](https://img.shields.io/node/v/qiniu-coding-helper.svg)](https://nodejs.org)
+[![Node.js Version](https://img.shields.io/node/v/%40latekin%2Fcoding-helper.svg)](https://nodejs.org)
 
 **One command to connect every AI coding assistant on your machine to Qiniu AI inference**
 
@@ -22,27 +22,49 @@ Running Claude Code, Codex and friends on the Qiniu API normally means opening e
 
 | You want to | Run |
 |---|---|
-| Configure one coding assistant in one command | `npx qiniu-coding-helper codex sk-xxx`, optional model as the third argument |
-| Connect every installed coding assistant to Qiniu | `npx qiniu-coding-helper setup` — pick the tools, everything is written in one go, then a summary table |
-| Use Qiniu for one session without touching config files | `npx qiniu-coding-helper run claude` |
-| See what would change first | `npx qiniu-coding-helper setup --dry-run` — a per-file diff with the key masked, nothing written |
+| Configure one coding assistant in one command | `npx @latekin/coding-helper codex sk-xxx`, optional model as the third argument |
+| Connect every installed coding assistant to Qiniu | `npx @latekin/coding-helper setup` — pick the tools, everything is written in one go, then a summary table |
+| Use Qiniu for one session without touching config files | `npx @latekin/coding-helper run claude` |
+| See what would change first | `npx @latekin/coding-helper setup --dry-run` — a per-file diff with the key masked, nothing written |
 | Change your key or endpoint | Change it once in the menu and pick which tools to update; on the CLI use `auth sk-xxx --sync` |
-| See which tools are connected | `npx qiniu-coding-helper status` |
-| Go back to how things were | `npx qiniu-coding-helper restore` — removes Qiniu entries and writes back the old values |
-| Find out why it isn't working | `npx qiniu-coding-helper doctor` — key, account billing status, network, env-var overrides |
+| See which tools are connected | `npx @latekin/coding-helper status` |
+| Go back to how things were | `npx @latekin/coding-helper restore` — removes Qiniu entries and writes back the old values |
+| Find out why it isn't working | `npx @latekin/coding-helper doctor` — key, account billing status, network, env-var overrides |
 | Configure from a script or CI | `setup --yes --json`, key via `--key-stdin`, exit code tells success from failure |
 | Several accounts, or switching between China and international | Profiles: `profile add work sk-xxx`, `profile use work`; Codex can even switch with `codex -p qn-work` |
 | Control cost and speed | Context size: `--context 64k` or the main menu, capped at each model's maximum |
 
 ## 🚀 Quick start
 
+Start the latest interactive wizard and follow the prompts to choose an endpoint, enter an API key, select tools, and confirm the changes:
+
+```bash
+npx @latekin/coding-helper@latest
+```
+
+Check the version, connection status, or restore the original settings:
+
+```bash
+npx @latekin/coding-helper@latest --version
+npx @latekin/coding-helper@latest status
+npx @latekin/coding-helper@latest doctor
+npx @latekin/coding-helper@latest restore
+```
+
+Alternatively, install or update globally and run `coding-helper`:
+
+```bash
+npm install -g @latekin/coding-helper@latest
+coding-helper
+```
+
 No install needed, Node.js 18+. **One command**: tool name + API key ([get one](https://portal.qiniu.com/ai-inference/api-key)) + optional model ID:
 
 ```bash
-npx qiniu-coding-helper codex sk-xxx                              # model chosen automatically
-npx qiniu-coding-helper claude sk-xxx deepseek/deepseek-v4-pro    # pick a model
-npx qiniu-coding-helper claude,codex,opencode sk-xxx              # several tools
-npx qiniu-coding-helper all sk-xxx                                # every installed tool
+npx @latekin/coding-helper codex sk-xxx                              # model chosen automatically
+npx @latekin/coding-helper claude sk-xxx deepseek/deepseek-v4-pro    # pick a model
+npx @latekin/coding-helper claude,codex,opencode sk-xxx              # several tools
+npx @latekin/coding-helper all sk-xxx                                # every installed tool
 ```
 
 The key, account and model are checked before anything is written; the output ends with how to start and how to undo:
@@ -53,10 +75,10 @@ The key, account and model are checked before anything is written; the output en
 ✔ Configured OpenCode
 
 Run opencode to start
-Undo: npx qiniu-coding-helper restore opencode
+Undo: npx @latekin/coding-helper restore opencode
 ```
 
-Prefer to choose step by step? Run `npx qiniu-coding-helper` for the 5-step wizard: language → endpoint → API key → tick coding assistants → choose a model. Later runs open the main menu.
+Prefer to choose step by step? Run `npx @latekin/coding-helper` for the 5-step wizard: language → endpoint → API key → tick coding assistants → choose a model. Later runs open the main menu.
 
 <p align="center"><img src="docs/images/main.png" width="720" alt="Main menu: pixel logo, connected tools as pixel characters, one-line status bar, current values on the right"></p>
 
@@ -92,7 +114,7 @@ Interface highlights:
 | Grok CLI | `~/.grok/config.toml` | ✅ 1.0.62 | `grok` (default model points to Qiniu) |
 | OpenClaw | `~/.openclaw/openclaw.json` | ✅ 2026.6.35 | `openclaw` (primary model `qiniu/<model>`) |
 | MiniMax Code | Official `mcode provider add`, writes `~/.minimax/config.yaml` | ✅ 0.6.12 | `mcode` |
-| GitHub Copilot CLI | No config file, env vars only | ✅ 1.0.100 | `npx qiniu-coding-helper run copilot` |
+| GitHub Copilot CLI | No config file, env vars only | ✅ 1.0.100 | `npx @latekin/coding-helper run copilot` |
 | CodeBuddy | `~/.codebuddy/models.json` | ✅ 2.170.0 | `codebuddy`, pick the Qiniu model with `--model` |
 | Hermes Agent | `model` in `~/.hermes/config.yaml` | ✅ official installer | `hermes` |
 | WorkBuddy | `~/.workbuddy/models.json` | ⚠️ not tested | Desktop app, start it yourself |
@@ -126,7 +148,7 @@ WorkBuddy only ships Windows / macOS desktop builds, so it can't be tested on Li
 | `coding-helper init` | Run the first-run wizard again |
 | `coding-helper lang show` / `lang set zh_CN\|en_US` | Show or change the UI language |
 
-`coding-helper` in the examples below can be written as `npx qiniu-coding-helper`. Tool names accept aliases such as `claude`, `qwen`, `kimi`, `mcode`, `factory`.
+`coding-helper` in the examples below can be written as `npx @latekin/coding-helper`. Tool names accept aliases such as `claude`, `qwen`, `kimi`, `mcode`, `factory`.
 
 ### 🎯 One command: tool + key + model
 
@@ -153,7 +175,7 @@ coding-helper <tool[,tool…]|all> [API key] [model ID] [options]
 
 **Codex models:** Codex works through Qiniu's Responses API, so the command first sends one minimal request to confirm the model works there. GPT, Qwen, GLM and Kimi models work in testing; DeepSeek doesn't yet. Without a model, Codex uses `openai/gpt-6-astra`; when configured together with other tools, an incompatible model only skips Codex.
 
-**Keeping the key safe:** a key typed into the command stays in your shell history (you'll get a reminder). Safer: `QINIU_API_KEY=sk-xxx npx qiniu-coding-helper codex`, or prefix the command with a space (most shells won't record it).
+**Keeping the key safe:** a key typed into the command stays in your shell history (you'll get a reminder). Safer: `QINIU_API_KEY=sk-xxx npx @latekin/coding-helper codex`, or prefix the command with a space (most shells won't record it).
 
 ### ⚡ setup
 

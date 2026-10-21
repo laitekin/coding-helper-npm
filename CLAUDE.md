@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Coding Helper — CLI 工具，把本机的 AI 编程助手一键接入七牛 API 端点。支持 13 个编程助手（Claude Code、Codex、OpenCode、Qwen Code、Kimi Code CLI、Factory Droid、Grok CLI、OpenClaw、MiniMax Code、GitHub Copilot CLI、CodeBuddy、WorkBuddy、Hermes Agent），提供交互式向导、非交互批量配置、还原与启动器模式，支持中英文。
 
-用户通过 `npx qiniu-coding-helper` 直接运行，无需全局安装。
+用户通过 `npx @latekin/coding-helper` 直接运行，无需全局安装。
 
 ## Build & Run
 

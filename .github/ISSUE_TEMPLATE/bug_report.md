@@ -1,6 +1,6 @@
 ---
 name: Bug 反馈
-about: 报告 qiniu-coding-helper 使用中的异常、报错或配置问题
+about: 报告 @latekin/coding-helper 使用中的异常、报错或配置问题
 title: "[Bug] "
 labels: bug
 assignees: ''
@@ -12,7 +12,7 @@ assignees: ''
 
 ## 复现步骤
 
-1. 运行命令：`npx qiniu-coding-helper ...`
+1. 运行命令：`npx @latekin/coding-helper ...`
 2. 选择或输入：
 3. 出现的问题：
 
@@ -33,7 +33,7 @@ assignees: ''
 - 操作系统：例如 macOS 14 / Ubuntu 22.04 / Windows 11
 - Node.js 版本：`node -v`
 - pnpm / npm 版本：`pnpm -v` 或 `npm -v`
-- qiniu-coding-helper 版本：`npx qiniu-coding-helper --version`
+- @latekin/coding-helper 版本：`npx @latekin/coding-helper --version`
 - 使用的工具：Claude Code / Codex / 其他
 - 工具版本：例如 `claude --version` 或 `codex --version`
 - 线路：国内线路 `api.qnaigc.com` / 海外线路 `openai.sufy.com`
@@ -43,7 +43,7 @@ assignees: ''
 如果可以，请运行以下命令并粘贴输出中与问题相关的部分：
 
 ```bash
-npx qiniu-coding-helper doctor
+npx @latekin/coding-helper doctor
 ```
 
 ## 其他信息

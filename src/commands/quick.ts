@@ -61,7 +61,7 @@ function resolveTools(names: string[] | 'all'): ITool[] {
 
 // 启动方式：命令行工具给出命令，Copilot CLI 走 run，桌面应用提示手动打开
 function launchHint(tool: ITool): string {
-  if (tool.launchOnly) return `npx qiniu-coding-helper run ${tool.name}`;
+  if (tool.launchOnly) return `npx @latekin/coding-helper run ${tool.name}`;
   if (tool.isInstalled() === null) return t('quick_launch_desktop', { tool: tool.displayName });
   return tool.command;
 }
@@ -71,7 +71,7 @@ function step(json: boolean, text: string): Ora | undefined {
   return json ? undefined : ora({ text, color: 'cyan' }).start();
 }
 
-// 单条命令：npx qiniu-coding-helper <工具[,工具…]|all> [API Key] [模型 ID]
+// 单条命令：npx @latekin/coding-helper <工具[,工具…]|all> [API Key] [模型 ID]
 export async function quickCommand(target: string, rest: string[], options: QuickOptions): Promise<void> {
   i18n.init();
   const json = !!options.json;

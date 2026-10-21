@@ -1,4 +1,4 @@
-// 单条命令（npx qiniu-coding-helper <工具> [Key] [模型]）的纯函数：参数解析、Key 来源、模型选择
+// 单条命令（npx @latekin/coding-helper <工具> [Key] [模型]）的纯函数：参数解析、Key 来源、模型选择
 
 export interface QuickArgs {
   // 工具名（含别名，原样保留，由调用方解析）；'all' 表示本机已安装的全部

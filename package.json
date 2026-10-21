@@ -1,5 +1,5 @@
 {
-  "name": "qiniu-coding-helper",
+  "name": "@latekin/coding-helper",
   "version": "0.6.3",
   "description": "CLI tool for configuring AI coding assistants with Qiniu API endpoints",
   "type": "module",
@@ -34,11 +34,11 @@
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "https://github.com/qiniu/coding-helper.git"
+    "url": "https://github.com/laitekin/coding-helper-npm.git"
   },
-  "homepage": "https://github.com/qiniu/coding-helper#readme",
+  "homepage": "https://github.com/laitekin/coding-helper-npm#readme",
   "bugs": {
-    "url": "https://github.com/qiniu/coding-helper/issues"
+    "url": "https://github.com/laitekin/coding-helper-npm/issues"
   },
   "engines": {
     "node": ">=18"
