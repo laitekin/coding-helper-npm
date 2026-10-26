@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.6.5] - 2026-10-26
+
+### 修复
+* 海外线路模型能力字段为 null 或缺失时使用安全默认值，修复选择模型时的崩溃。
+
+### 交互改进
+* 勾选页支持空格勾选、回车继续；未勾选时回车直接处理当前工具，允许空选择的页面仍保留「只保存」语义。
+* 文本输入、确认与「按回车继续」支持 Esc 返回；自定义上下文输入取消时不再尝试解析空值。
+* 保留个人包 `@latekin/coding-helper` 的安装、更新命令与仓库链接。
+
+源更新：https://github.com/laitekin/coding-helper/pull/1
+
 ## [0.6.4] - 2026-10-21
 
 ### 变更
