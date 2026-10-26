@@ -230,7 +230,7 @@ test('profile commands, @profile in one command, --context, and restore', async 
   assert.equal(fs.existsSync(path.join(home, '.config/opencode/opencode.json')), false);
 });
 
-test('findCommand finds tools outside PATH, e.g. Claude Code local install behind a shell alias', async () => {
+test('findCommand finds tools outside PATH, e.g. Claude Code local install behind a shell alias', async (t) => {
   const { findCommand } = await import('../dist/utils/find-command.js');
   const { ClaudeCodeTool } = await import('../dist/lib/tools/claude-code-tool.js');
   const dir = path.join(os.homedir(), '.claude', 'local');
@@ -238,6 +238,14 @@ test('findCommand finds tools outside PATH, e.g. Claude Code local install behin
   const file = path.join(dir, 'claude');
   fs.writeFileSync(file, '#!/bin/sh\necho "9.8.7 (Claude Code)"\n', { mode: 0o755 });
   const savedPath = process.env.PATH;
+  // 隔离宿主机的全局安装，只让本用例创建的 Claude 可执行文件参与查找。
+  const originalStatSync = fs.statSync;
+  t.mock.method(fs, 'statSync', (candidate, ...args) => {
+    if (path.basename(String(candidate)) === 'claude' && String(candidate) !== file) {
+      throw Object.assign(new Error('Not present in test fixture'), { code: 'ENOENT' });
+    }
+    return originalStatSync(candidate, ...args);
+  });
   process.env.PATH = '/nonexistent';
   try {
     assert.equal(findCommand('claude'), undefined);
