@@ -245,3 +245,11 @@ test('unknown first argument is reported with the list of tools', async () => {
   assert.equal(r.code, 1);
   assert.match(r.stderr, /claude, codex/);
 });
+
+test('Claude Code gets the model context window instead of an assumed 1M window', async () => {
+  const r = await run(['claude', 'sk-good', 'z-ai/glm-5.2', '--json']);
+  assert.equal(r.code, 0, r.stdout + r.stderr);
+  const { env } = JSON.parse(fs.readFileSync(path.join(r.home, '.claude', 'settings.json'), 'utf-8'));
+  assert.equal(env.CLAUDE_CODE_DISABLE_1M_CONTEXT, '1');
+  assert.equal(env.CLAUDE_CODE_MAX_CONTEXT_TOKENS, '128000');
+});

@@ -5,6 +5,7 @@ import type { ITool } from './base-tool.js';
 import { configManager, type ModelConfig } from '../config.js';
 import { t } from '../i18n.js';
 import { isQiniuBaseUrl } from '../endpoints.js';
+import { getModelCapabilities, marketModelService } from '../market-model-service.js';
 import { readJsonObjectStrict, safeWriteFile, writeJson, writeJsonOrRemove } from '../core/safe-write.js';
 import { stateStore, type PriorValues } from '../core/state-store.js';
 import { runModelSelectionFlow } from '../wizard/flows/model-selection-flow.js';
@@ -33,6 +34,9 @@ const CLAUDE_ENV_KEYS = [
   'API_TIMEOUT_MS',
   'CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC',
   'CLAUDE_CODE_ATTRIBUTION_HEADER',
+  // 上下文窗口：七牛模型 Claude Code 不认识，需要告诉它真实上限
+  'CLAUDE_CODE_DISABLE_1M_CONTEXT',
+  'CLAUDE_CODE_MAX_CONTEXT_TOKENS',
 ];
 
 // 用户在 Claude Code 里用 /model 选的模型（settings.json 的 model），没有时返回 undefined
@@ -129,7 +133,7 @@ export class ClaudeCodeTool implements ITool {
 
     // 写入七牛配置；先清掉旧的模型变量，避免取消选择后残留
     for (const key of CLAUDE_ENV_KEYS) delete env[key];
-    settings.env = { ...env, ...buildClaudeEnv(apiKey, baseUrl, models) };
+    settings.env = { ...env, ...buildClaudeEnv(apiKey, baseUrl, models, await fetchContextWindow(apiKey, baseUrl, models)) };
 
     // 在 Claude Code 里用 /model 选过的模型保存在 settings.model，会盖过上面的模型槽位。
     // 切换模型时一并清掉，让 /model 回到「Default」并跟随主模型；原值记下，restore 时写回
@@ -161,8 +165,8 @@ export class ClaudeCodeTool implements ITool {
   }
 
   // 启动器模式：与写入 settings.json 的变量一致，只作用于本次启动
-  getLaunchEnv(apiKey: string, baseUrl: string, models: ModelConfig): Record<string, string> {
-    return buildClaudeEnv(apiKey, baseUrl, models);
+  async getLaunchEnv(apiKey: string, baseUrl: string, models: ModelConfig): Promise<Record<string, string>> {
+    return buildClaudeEnv(apiKey, baseUrl, models, await fetchContextWindow(apiKey, baseUrl, models));
   }
 
   // 从 Claude Code 移除配置
@@ -206,8 +210,25 @@ export class ClaudeCodeTool implements ITool {
   }
 }
 
+// 各模型槽位里最小的上下文上限（来自模型市场）；查不到时返回 undefined
+async function fetchContextWindow(apiKey: string, baseUrl: string, models: ModelConfig): Promise<number | undefined> {
+  const claudeCode = models.claudeCode || {};
+  const used = new Set([claudeCode.haikuModel, claudeCode.sonnetModel, claudeCode.opusModel, claudeCode.subagentModel]
+    .filter((m): m is string => !!m));
+  if (used.size === 0) return undefined;
+  try {
+    const market = await marketModelService.fetchModels(baseUrl.replace(/\/+$/, ''), apiKey);
+    const windows = market
+      .filter((m) => used.has(m.id) && (m.model_constraints?.context_length ?? 0) > 0)
+      .map((m) => getModelCapabilities(m).maxInputTokens);
+    return windows.length > 0 ? Math.min(...windows) : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 // 七牛线路下 Claude Code 需要的环境变量（settings.json 与启动器共用）
-function buildClaudeEnv(apiKey: string, baseUrl: string, models: ModelConfig): Record<string, string> {
+export function buildClaudeEnv(apiKey: string, baseUrl: string, models: ModelConfig, contextWindow?: number): Record<string, string> {
   const env: Record<string, string> = {
     ANTHROPIC_BASE_URL: baseUrl,
     ANTHROPIC_AUTH_TOKEN: apiKey,
@@ -236,6 +257,10 @@ function buildClaudeEnv(apiKey: string, baseUrl: string, models: ModelConfig): R
     env.ANTHROPIC_DEFAULT_FABLE_MODEL_DESCRIPTION = t('claude_slot_desc_fable');
   }
   if (claudeCode.subagentModel) env.CLAUDE_CODE_SUBAGENT_MODEL = claudeCode.subagentModel;
+  // 七牛模型 ID Claude Code 都不认识：默认的 Opus 别名会被加上 [1m] 当成 1M 上下文（其余按 200k 估算），
+  // 自动压缩来不及触发就会超出模型上限。关掉 1M，再按模型真实上限设置窗口
+  env.CLAUDE_CODE_DISABLE_1M_CONTEXT = '1';
+  if (contextWindow) env.CLAUDE_CODE_MAX_CONTEXT_TOKENS = String(contextWindow);
   return env;
 }
 

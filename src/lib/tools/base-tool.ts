@@ -48,7 +48,7 @@ export interface ITool {
   launchOnly?: boolean;
 
   // 启动器模式：只注入子进程的环境变量，不改用户配置文件
-  getLaunchEnv?(apiKey: string, baseUrl: string, models: ModelConfig): Record<string, string>;
+  getLaunchEnv?(apiKey: string, baseUrl: string, models: ModelConfig): Record<string, string> | Promise<Record<string, string>>;
 
   // 清除模型配置
   clearModelConfig(): void;

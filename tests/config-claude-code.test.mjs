@@ -74,3 +74,14 @@ test('setModels merges partial Claude Code config updates', () => {
     useDefaultModels: false,
   });
 });
+
+test('buildClaudeEnv turns off 1M context and sets the window only when known', async () => {
+  const { buildClaudeEnv } = await import('../dist/lib/tools/claude-code-tool.js');
+  const models = { claudeCode: { sonnetModel: 'z-ai/glm-5.2', opusModel: 'z-ai/glm-5.2' } };
+  const known = buildClaudeEnv('sk', 'https://api.qnaigc.com', models, 200000);
+  assert.equal(known.CLAUDE_CODE_DISABLE_1M_CONTEXT, '1');
+  assert.equal(known.CLAUDE_CODE_MAX_CONTEXT_TOKENS, '200000');
+  const unknown = buildClaudeEnv('sk', 'https://api.qnaigc.com', models);
+  assert.equal(unknown.CLAUDE_CODE_DISABLE_1M_CONTEXT, '1');
+  assert.equal('CLAUDE_CODE_MAX_CONTEXT_TOKENS' in unknown, false);
+});

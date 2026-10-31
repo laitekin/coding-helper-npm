@@ -349,6 +349,8 @@ In testing, 12 tools with existing user configs went through `setup` twice and t
     "API_TIMEOUT_MS": "3000000",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
+    "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "<model context limit>",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "<chosen model>"
   },
   "companyAnnouncements": ["您正在使用七牛云 AI 大模型推理服务 🚀"],
@@ -356,7 +358,7 @@ In testing, 12 tools with existing user configs went through `setup` twice and t
 }
 ```
 
-The 50-minute timeout suits long reasoning requests; non-essential traffic and attribution are turned off to improve cache hit rates through the gateway. Shell variables such as `ANTHROPIC_BASE_URL` override these settings — `doctor` detects them.
+The 50-minute timeout suits long reasoning requests; non-essential traffic and attribution are turned off to improve cache hit rates through the gateway. Claude Code doesn't recognize Qiniu model IDs and would treat the default model as having a 1M window, so 1M context is turned off and `CLAUDE_CODE_MAX_CONTEXT_TOKENS` is set to the model's real limit, so auto-compaction happens before the limit is hit. Shell variables such as `ANTHROPIC_BASE_URL` override these settings — `doctor` detects them.
 
 </details>
 

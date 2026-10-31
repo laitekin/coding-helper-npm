@@ -43,7 +43,7 @@ export async function runCommand(toolName: string, args: string[]): Promise<void
 
   let env: Record<string, string>;
   try {
-    env = tool.getLaunchEnv(apiKey, connection.baseUrl, configManager.getModels());
+    env = await tool.getLaunchEnv(apiKey, connection.baseUrl, configManager.getModels());
   } catch (err: unknown) {
     uiRenderer.renderError(err instanceof Error ? err.message : String(err));
     process.exitCode = 1;

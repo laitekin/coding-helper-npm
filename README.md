@@ -369,6 +369,8 @@ Coding Helper 改的都是你日常使用的配置文件，所以每次写入都
     "API_TIMEOUT_MS": "3000000",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+    "CLAUDE_CODE_DISABLE_1M_CONTEXT": "1",
+    "CLAUDE_CODE_MAX_CONTEXT_TOKENS": "<模型上下文上限>",
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "<所选模型>"
   },
   "companyAnnouncements": ["您正在使用七牛云 AI 大模型推理服务 🚀"],
@@ -376,7 +378,7 @@ Coding Helper 改的都是你日常使用的配置文件，所以每次写入都
 }
 ```
 
-超时设为 50 分钟以适配长时间推理；关闭非必要流量和归属标注，以提高网关下的缓存命中率。shell 中的 `ANTHROPIC_BASE_URL` 等变量会覆盖这里的设置，`doctor` 会检测并提示。
+超时设为 50 分钟以适配长时间推理；关闭非必要流量和归属标注，以提高网关下的缓存命中率。七牛模型 Claude Code 不认识，会把默认模型当成 1M 上下文，所以关掉 1M 并按模型真实上限写入 `CLAUDE_CODE_MAX_CONTEXT_TOKENS`，自动压缩才会在超限前触发。shell 中的 `ANTHROPIC_BASE_URL` 等变量会覆盖这里的设置，`doctor` 会检测并提示。
 
 </details>
 
