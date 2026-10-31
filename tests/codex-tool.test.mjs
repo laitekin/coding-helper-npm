@@ -60,7 +60,7 @@ test('buildCodexConfig replaces existing TOML to avoid configuration conflicts',
   assert.match(next, /requires_openai_auth = true/);
   assert.match(next, /model_catalog_json = "\/tmp\/qnaigc\.json"/);
   assert.doesNotMatch(next, /env_key = "QINIU_API_KEY"/);
-  assert.match(next, /\[profiles\.qn-gpt\]\nmodel_provider = "qnaigc"\nmodel = "openai\/gpt-5\.2"/);
+  assert.doesNotMatch(next, /\[profiles\.qn-gpt\]/);
   assert.doesNotMatch(next, /\[profiles\.keep\]/);
   assert.doesNotMatch(next, /https:\/\/old\.example/);
   assert.doesNotMatch(next, /model = "old-model"/);
@@ -201,7 +201,14 @@ test('mergeCodexConfig keeps user content and adds the managed provider', () => 
   assert.equal(getTopLevelTomlValue(next, 'model_provider'), '"qnaigc"');
   assert.equal(getTopLevelTomlValue(next, 'model_catalog_json'), '"/home/user/.codex/model-catalogs/qnaigc.json"');
   assert.match(next, /\[model_providers\.qnaigc\]\nname = "Qiniu"/);
-  assert.match(next, /\[profiles\.qn-gpt\]/);
+  assert.doesNotMatch(next, /\[profiles\.qn-gpt\]/);
+});
+
+test('mergeCodexConfig drops the legacy [profiles.qn-gpt] table (codex --profile qn-gpt errors on it)', () => {
+  const legacy = `${USER_CONFIG}\n[profiles.qn-gpt]\nmodel_provider = "qnaigc"\nmodel = "openai/gpt-5.2"\n`;
+  const next = mergeCodexConfig(legacy, 'https://api.qnaigc.com', 'openai/gpt-5.5', '/home/user/.codex/model-catalogs/qnaigc.json');
+  assert.doesNotMatch(next, /\[profiles\.qn-gpt\]/);
+  assert.match(next, /\[profiles\.keep\]/);
 });
 
 test('mergeCodexConfig is idempotent', () => {

@@ -363,7 +363,7 @@ The 50-minute timeout suits long reasoning requests; non-essential traffic and a
 <details>
 <summary><b>Codex</b></summary>
 
-Updates the top-level `model`, `model_provider` and `model_catalog_json` in place in `~/.codex/config.toml` and adds these two tables; MCP servers, sandbox policy and other providers are kept:
+Updates the top-level `model`, `model_provider` and `model_catalog_json` in place in `~/.codex/config.toml` and adds this provider table; MCP servers, sandbox policy and other providers are kept:
 
 ```toml
 [model_providers.qnaigc]
@@ -371,10 +371,6 @@ name = "Qiniu"
 base_url = "https://api.qnaigc.com/bypass/openai/v1"
 requires_openai_auth = true
 wire_api = "responses"
-
-[profiles.qn-gpt]
-model_provider = "qnaigc"
-model = "openai/gpt-6-astra"
 ```
 
 The key goes to `~/.codex/auth.json` and the Qiniu GPT catalog to `~/.codex/model-catalogs/qnaigc.json`. Restore writes back the replaced top-level keys and the OpenAI key previously in `auth.json`.

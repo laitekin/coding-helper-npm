@@ -35,7 +35,8 @@ const CODEX_AUTH_FILE = path.join(CODEX_DIR, 'auth.json');
 const CODEX_CATALOG_DIR = path.join(CODEX_DIR, 'model-catalogs');
 const CODEX_CATALOG_FILE = path.join(CODEX_CATALOG_DIR, 'qnaigc.json');
 const PROVIDER_NAME = 'qnaigc';
-const PROFILE_NAME = 'qn-gpt';
+// 旧版本写入的 [profiles.qn-gpt] 表：Codex 0.134+ 在 --profile qn-gpt 时会报错，不再写入，装载/还原时清理
+const LEGACY_PROFILE_NAME = 'qn-gpt';
 const CODEX_MODEL = 'openai/gpt-6-astra';
 const DEFAULT_CODEX_BASE_URL = getBaseUrl(DEFAULT_ENDPOINT);
 
@@ -107,7 +108,7 @@ export class CodexTool implements ITool {
 
   clearModelConfig(): void {
     const content = readCodexConfig();
-    safeWriteFile(CODEX_CONFIG_FILE, normalizeToml(removeTomlTable(content, 'profiles.qn-gpt')));
+    safeWriteFile(CODEX_CONFIG_FILE, normalizeToml(removeTomlTable(content, `profiles.${LEGACY_PROFILE_NAME}`)));
   }
 
   async loadConfig(apiKey: string, baseUrl: string, models: ModelConfig): Promise<void> {
@@ -240,15 +241,6 @@ export function buildCodexConfig(_existing: string, baseUrl?: string, model?: st
     '',
   ];
 
-  if (model) {
-    sections.push(
-      `[profiles.${PROFILE_NAME}]`,
-      `model_provider = "${PROVIDER_NAME}"`,
-      `model = "${escapeTomlString(model)}"`,
-      '',
-    );
-  }
-
   return normalizeToml(sections.join('\n'));
 }
 
@@ -325,7 +317,7 @@ export function codexProfileName(profile: string): string {
 
 function isProfileTable(name: string): boolean {
   return name.startsWith(`model_providers.${PROFILE_PROVIDER_PREFIX}`) ||
-    (name.startsWith(`profiles.${PROFILE_TABLE_PREFIX}`) && name !== `profiles.${PROFILE_NAME}`);
+    (name.startsWith(`profiles.${PROFILE_TABLE_PREFIX}`) && name !== `profiles.${LEGACY_PROFILE_NAME}`);
 }
 
 // 配置档：config.toml 里每个配置档一个 provider（自带 Key，互不影响）；
@@ -421,7 +413,7 @@ function removeManagedTables(content: string): string {
   return removeTomlTablesWhere(
     removeTomlTable(
       removeTomlTable(content, `model_providers.${PROVIDER_NAME}`),
-      `profiles.${PROFILE_NAME}`,
+      `profiles.${LEGACY_PROFILE_NAME}`,
     ),
     isProfileTable,
   );
@@ -433,7 +425,7 @@ export function removeManagedCodexConfig(existing: string): string {
   content = removeTopLevelCatalogPath(content);
   content = removeTopLevelQnaigcModelProvider(content);
   content = removeTomlTable(content, `model_providers.${PROVIDER_NAME}`);
-  content = removeTomlTable(content, `profiles.${PROFILE_NAME}`);
+  content = removeTomlTable(content, `profiles.${LEGACY_PROFILE_NAME}`);
   return normalizeToml(content);
 }
 

@@ -383,7 +383,7 @@ Coding Helper 改的都是你日常使用的配置文件，所以每次写入都
 <details>
 <summary><b>Codex</b></summary>
 
-在 `~/.codex/config.toml` 中原地更新顶层的 `model`、`model_provider`、`model_catalog_json`，并添加以下两张表；MCP 服务器、沙箱策略和其他 provider 原样保留：
+在 `~/.codex/config.toml` 中原地更新顶层的 `model`、`model_provider`、`model_catalog_json`，并添加以下 provider 表；MCP 服务器、沙箱策略和其他 provider 原样保留：
 
 ```toml
 [model_providers.qnaigc]
@@ -391,10 +391,6 @@ name = "Qiniu"
 base_url = "https://api.qnaigc.com/bypass/openai/v1"
 requires_openai_auth = true
 wire_api = "responses"
-
-[profiles.qn-gpt]
-model_provider = "qnaigc"
-model = "openai/gpt-6-astra"
 ```
 
 API Key 写入 `~/.codex/auth.json`，七牛 GPT 模型目录写入 `~/.codex/model-catalogs/qnaigc.json`。还原时会写回原来的顶层键和 `auth.json` 中原有的 OpenAI Key。
